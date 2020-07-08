@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.IndexerApp", "MyLab.IndexerApp\MyLab.IndexerApp.csproj", "{E332FCCC-EB42-4D01-BA10-4F9951737175}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.Indexer", "MyLab.Indexer\MyLab.Indexer.csproj", "{44EAD594-BB9E-4A80-A250-3F37F98BE798}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E332FCCC-EB42-4D01-BA10-4F9951737175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E332FCCC-EB42-4D01-BA10-4F9951737175}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E332FCCC-EB42-4D01-BA10-4F9951737175}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E332FCCC-EB42-4D01-BA10-4F9951737175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
