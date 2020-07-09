@@ -39,14 +39,6 @@
         /// </remarks>
         public string DbProviderName { get; set; }
 
-        ///// <summary>
-        ///// Entities selection query
-        ///// </summary>
-        ///// <remarks>
-        ///// select * from t where Id in ({ids})
-        ///// </remarks>
-        //public string SelectByIdsQuery { get; set; }
-
         /// <summary>
         /// Entities selection query
         /// </summary>
@@ -55,30 +47,14 @@
         /// </remarks>
         public string SelectQuery { get; set; }
 
-        ///// <summary>
-        ///// Entities selection query
-        ///// </summary>
-        ///// <remarks>
-        ///// select * from t limit {limit} offset {offset}
-        ///// </remarks>
-        //public string SelectPageQuery { get; set; }
-
-        ///// <summary>
-        ///// Id field prefix in query
-        ///// </summary>
-        ///// <remarks>
-        ///// "'" for example in 'string' case
-        ///// </remarks>
-        //public string IdFieldPrefix { get; set; }
-        ///// <summary>
-        ///// Id field suffix in query
-        ///// </summary>
-        ///// <remarks>
-        ///// "'" for example in 'string' case
-        ///// </remarks>
-        //public string IdFieldSuffix { get; set; }
-
+        /// <summary>
+        /// Identifier field name. `Id` by default. 
+        /// </summary>
         public string IdField { get; set; } = "Id";
+
+        /// <summary>
+        /// Fields to index
+        /// </summary>
         public string[] Fields { get; set; }
 
     }
