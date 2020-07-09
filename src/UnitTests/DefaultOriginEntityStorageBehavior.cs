@@ -138,6 +138,34 @@ namespace UnitTests
             Assert.Null(found);
         }
 
+        [Fact]
+        public async Task ShouldSupportSyntheticFields()
+        {
+            //Arrange
+            var db = await _fxt.CreateDbAsync(new StrEntDbInitializer());
+
+            var options = new IndexerOptions
+            {
+                Db = new IndexerDbOptions
+                {
+                    SelectQuery = "select '1' as Id, 'foo' as Value",
+                    Fields = new[] { nameof(StrTestEntity.Value) }
+                }
+            };
+
+            var storage = new DefaultOriginEntityStorage(db, options);
+
+            //Act
+            var found = await storage.Query().FirstAsync();
+            
+            object foundVal = null;
+            found?.ExtendedProperties.TryGetValue(nameof(StrTestEntity.Value), out foundVal);
+
+            //Assert
+            Assert.NotNull(found);
+            Assert.Equal("foo", foundVal);
+        }
+
         [Table("test")]
         class StrTestEntity
         {
