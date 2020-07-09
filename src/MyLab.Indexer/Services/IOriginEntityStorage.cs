@@ -69,7 +69,30 @@ namespace MyLab.Indexer.Services
 
         public IQueryable<DbEntity> Query()
         {
-            return _db.DoOnce().FromSql<DbEntity>(new RawSqlString(_options.Db.SelectQuery));
+            var dc = _db.DoOnce();
+
+            var mb = dc.MappingSchema.GetFluentMappingBuilder();
+            var entB = mb.Entity<DbEntity>()
+                .HasPrimaryKey(x => Sql.Property<string>(x, _options.Db.IdField));
+
+            var fields = _options.Db.Fields;
+
+            if (fields != null)
+            {
+                if (fields.Length > 0)
+                {
+                    var propB = entB.Property(x => Sql.Property<string>(x, fields[0])).IsNullable();
+                    if (fields.Length > 1)
+                    {
+                        foreach (var f in _options.Db.Fields.Skip(1))
+                        {
+                            propB = propB.Property(x => Sql.Property<string>(x, f)).IsNullable();
+                        }
+                    }
+                }
+            }
+
+            return dc.FromSql<DbEntity>(new RawSqlString(_options.Db.SelectQuery));
         }
     }
 }

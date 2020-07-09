@@ -27,7 +27,12 @@ namespace MyLab.Indexer.Services
 
         public IAsyncEnumerable<DbEntity[]> ProvideEntities(string[] ids)
         {
-            return new OriginEntityEnumerable(_storage, ids, _options.BatchSize);
+            return new OriginEntityEnumerable(_storage, _options.BatchSize, ids);
+        }
+
+        public IAsyncEnumerable<DbEntity[]> ProvideAllEntities()
+        {
+            return new OriginEntityEnumerable(_storage, _options.BatchSize);
         }
 
         class OriginEntityEnumerable : IAsyncEnumerable<DbEntity[]>
@@ -36,7 +41,7 @@ namespace MyLab.Indexer.Services
             private readonly string[] _ids;
             private readonly int _batchSize;
 
-            public OriginEntityEnumerable(IOriginEntityStorage storage, string[] ids, int batchSize)
+            public OriginEntityEnumerable(IOriginEntityStorage storage, int batchSize, string[] ids = null)
             {
                 _storage = storage ?? throw new ArgumentNullException(nameof(storage));
                 _ids = ids;
@@ -101,8 +106,9 @@ namespace MyLab.Indexer.Services
 
                 Current = await q.ToArrayAsync(_cancellationToken);
 
-                return Current.Length == _batchSize;
+                return Current.Length != 0;
             }
         }
+
     }
 }

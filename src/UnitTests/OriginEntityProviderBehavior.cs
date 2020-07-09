@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MyLab.Indexer;
@@ -16,7 +14,7 @@ namespace UnitTests
         public async Task ShouldProvideAllWhenIdsNotSpecified(string[] ids)
         {
             //Arrange
-            var src = new OriginEntityStorage(4);
+            var src = new TestOriginEntityStorage(4);
             var opt = new IndexerOptions
             {
                 BatchSize = 2
@@ -43,7 +41,7 @@ namespace UnitTests
         public async Task ShouldProvideWhenSpecified()
         {
             //Arrange
-            var src = new OriginEntityStorage(4);
+            var src = new TestOriginEntityStorage(4);
             var opt = new IndexerOptions
             {
                 BatchSize = 2
@@ -69,22 +67,6 @@ namespace UnitTests
         {
             yield return new object[]{ null };
             yield return new object[]{ new string[0]  };
-        }
-
-        class OriginEntityStorage : Collection<DbEntity>, IOriginEntityStorage
-        {
-            public OriginEntityStorage(int count)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    Add(new DbEntity { Id = i.ToString()});
-                }
-            }
-
-            public IQueryable<DbEntity> Query()
-            {
-                return this.AsQueryable();
-            }
         }
     }
 }

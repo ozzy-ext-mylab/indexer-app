@@ -78,5 +78,8 @@
         ///// </remarks>
         //public string IdFieldSuffix { get; set; }
 
+        public string IdField { get; set; } = "Id";
+        public string[] Fields { get; set; }
+
     }
 }

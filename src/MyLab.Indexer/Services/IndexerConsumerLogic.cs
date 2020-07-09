@@ -17,16 +17,21 @@ namespace MyLab.Indexer.Services
         public IndexerConsumerLogic(
             OriginEntityProvider entityProvider,
             IEntityIndexer indexer,
-            IReporter reporter)
+            IReporter reporter = null)
         {
             _entityProvider = entityProvider ?? throw new ArgumentNullException(nameof(entityProvider));
             _indexer = indexer ?? throw new ArgumentNullException(nameof(indexer));
-            _reporter = reporter ?? throw new ArgumentNullException(nameof(reporter));
+            _reporter = reporter;
         }
 
         public async Task Consume(MqMessage<IndexingMsg> message)
         {
-            await Update(message.Payload.Update);
+            if (message.Payload.Reindex)
+            {
+                await Reindex();
+            }
+            if(message.Payload.Update != null)
+                await Update(message.Payload.Update);
 
             var dList = message.Payload.Delete;
             if (dList != null && dList.Length > 0)
@@ -40,7 +45,7 @@ namespace MyLab.Indexer.Services
 
         private async Task Update(string[] updateList)
         {
-            var lost = updateList.ToList();
+            var lost = updateList?.ToList();
 
             await foreach (var entityBatch in _entityProvider.ProvideEntities(updateList))
             {
@@ -48,11 +53,25 @@ namespace MyLab.Indexer.Services
 
                 await _indexer.IndexEntityBatchAsync(docs);
 
-                lost.RemoveAll(id => entityBatch.Any(e => e.Id == id));
+                lost?.RemoveAll(id => entityBatch.Any(e => e.Id == id));
             }
 
-            if (lost.Count > 0)
-                _reporter.ReportAboutLostEntities(lost.ToArray());
+            if (lost != null && lost.Count > 0)
+                _reporter?.ReportAboutLostEntities(lost.ToArray());
+        }
+
+        private async Task Reindex()
+        {
+            await _indexer.StartReindex();
+
+            await foreach (var entityBatch in _entityProvider.ProvideAllEntities())
+            {
+                var docs = entityBatch.ToArray();
+
+                await _indexer.IndexEntityBatchAsync(docs);
+            }
+
+            await _indexer.EndReindex();
         }
     }
 }

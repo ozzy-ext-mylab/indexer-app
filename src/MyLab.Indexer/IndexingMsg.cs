@@ -6,7 +6,12 @@
     public class IndexingMsg
     {
         /// <summary>
-        /// Identified array to update. Empty - update all.
+        /// Indicates that need to reindex all entities. 'Update' property is ignored.
+        /// </summary>
+        public bool Reindex { get; set; }
+
+        /// <summary>
+        /// Identified array to update. Empty - update none.
         /// </summary>
         public string[] Update { get; set; }
 

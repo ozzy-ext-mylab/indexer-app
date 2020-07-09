@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LinqToDB.Data;
 using LinqToDB.DataProvider;
+using LinqToDB.SqlQuery;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.Db;
@@ -15,21 +12,43 @@ namespace MyLab.Indexer
 {
     static class Integration
     {
-        public static IServiceCollection AddIndexerLogic(this IServiceCollection serviceCollection, IConfiguration configuration)
+        public static IServiceCollection AddIndexerLogic(this IServiceCollection srv, IConfiguration config)
         {
-            var options = GetOptions(configuration);
+            return AddIndexerLogic(srv, new IntegrationConfiguration
+            {
+                IntegrateEsTools = true,
+                Configuration = config,
+                EntityIndexerRegistrar = new GenericSingletonRegistrar<IEntityIndexer, DefaultEntityIndexer>(),
+                EntityStorageRegistrar = new GenericSingletonRegistrar<IOriginEntityStorage, DefaultOriginEntityStorage>(),
+                ReportersRegistrar = new GenericSingletonRegistrar<IReporter,DefaultReporter>()
+            });
+        }
 
-            RegisterOptions(serviceCollection, options);
+        public static IServiceCollection AddIndexerLogic(this IServiceCollection srv, IntegrationConfiguration icfg)
+        {
+            if (icfg == null) throw new ArgumentNullException(nameof(icfg));
+
+            if(icfg.Configuration == null) throw new InvalidOperationException("Configuration is null");
+            if(icfg.EntityIndexerRegistrar == null) throw new InvalidOperationException("EntityIndexerRegistrar is null");
+
+            var options = GetOptions(icfg.Configuration);
+
+            RegisterOptions(srv, options);
 
             var dataProvider = GetDataProvider(options.Db.DbProviderName);
             var indexMsgConsumer = new MqConsumer<IndexingMsg, IndexerConsumerLogic>(options.Queue);
 
-            return serviceCollection
-                .AddDbTools(configuration, dataProvider)
-                .AddMqConsuming(registrar => registrar.RegisterConsumer(indexMsgConsumer))
-                .AddEsTools(configuration)
-                .AddSingleton<OriginEntityProvider>()
-                .AddSingleton<IOriginEntityStorage, DefaultOriginEntityStorage>();
+            icfg.EntityIndexerRegistrar.Register(srv);
+            icfg.EntityStorageRegistrar.Register(srv);
+
+            srv.AddDbTools(icfg.Configuration, dataProvider);
+            srv.AddMqConsuming(registrar => registrar.RegisterConsumer(indexMsgConsumer), icfg.OverrideMqInitiatorRegistrar);
+            srv.AddSingleton<OriginEntityProvider>();
+
+            if (icfg.IntegrateEsTools)
+                srv.AddEsTools(icfg.Configuration);
+
+            return srv;
         }
 
         private static IDataProvider GetDataProvider(string dbDbProviderName)
@@ -53,9 +72,23 @@ namespace MyLab.Indexer
         {
             var options = new IndexerOptions();
 
-            configuration.GetSection("indexer").Bind(options);
+            configuration.GetSection(IndexerAppConst.RootConfigName).Bind(options);
 
             return options;
         }
+    }
+
+    class IntegrationConfiguration
+    {
+        public ISingletonRegistrar<IEntityIndexer> EntityIndexerRegistrar { get; set; }
+
+        public ISingletonRegistrar<IOriginEntityStorage> EntityStorageRegistrar { get; set; }
+        public ISingletonRegistrar<IReporter> ReportersRegistrar { get; set; }
+
+        public bool IntegrateEsTools { get; set; }
+
+        public IInitiatorRegistrar OverrideMqInitiatorRegistrar { get; set; }
+
+        public IConfiguration Configuration { get; set; }
     }
 }
