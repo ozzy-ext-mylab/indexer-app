@@ -62,7 +62,7 @@ namespace MyLab.Indexer.Services
 
         private async Task Reindex()
         {
-            await _indexer.StartReindex();
+            await _indexer.StartReindexAsync();
 
             await foreach (var entityBatch in _entityProvider.ProvideAllEntities())
             {
@@ -71,7 +71,7 @@ namespace MyLab.Indexer.Services
                 await _indexer.IndexEntityBatchAsync(docs);
             }
 
-            await _indexer.EndReindex();
+            await _indexer.EndReindexAsync();
         }
     }
 }

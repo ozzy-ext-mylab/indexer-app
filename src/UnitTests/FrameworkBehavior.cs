@@ -201,13 +201,13 @@ namespace UnitTests
                 return Task.CompletedTask;
             }
 
-            public Task StartReindex()
+            public Task StartReindexAsync()
             {
                 _indexed.Clear();
                 return Task.CompletedTask;
             }
 
-            public Task EndReindex()
+            public Task EndReindexAsync()
             {
                 return Task.CompletedTask;
             }

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.Indexer", "MyLab.Indexer\MyLab.Indexer.csproj", "{44EAD594-BB9E-4A80-A250-3F37F98BE798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.Indexer", "MyLab.Indexer\MyLab.Indexer.csproj", "{44EAD594-BB9E-4A80-A250-3F37F98BE798}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{3F654203-8039-408B-B3B6-4306FB69F981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F654203-8039-408B-B3B6-4306FB69F981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F654203-8039-408B-B3B6-4306FB69F981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F654203-8039-408B-B3B6-4306FB69F981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F654203-8039-408B-B3B6-4306FB69F981}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
