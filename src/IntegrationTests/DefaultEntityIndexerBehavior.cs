@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Threading.Tasks;
 using MyLab.Elastic;
 using MyLab.Elastic.Test;
+using MyLab.Indexer;
 using MyLab.Indexer.Services;
 using Nest;
-using Utf8Json;
 using Xunit;
 using Xunit.Abstractions;
+using IndexOptions = MyLab.Indexer.IndexOptions;
 
 namespace IntegrationTests
 {
@@ -27,7 +28,13 @@ namespace IntegrationTests
         {
             //Arrange
             var indexName = "test-" + Guid.NewGuid().ToString("N");
-            var indexer = new DefaultEntityIndexer(_fxt.Manager, indexName);
+            var indexerOptions = new IndexOptions
+            {
+                IndexName = indexName,
+                IdFieldName = nameof(TestEntity.CustomId),
+                IdFieldIsString = false
+            };
+            var indexer = new DefaultEntityIndexer(_fxt.Manager,indexerOptions);
             var testEnt = new DbEntity
             {
                 Id = "2",
@@ -52,26 +59,31 @@ namespace IntegrationTests
                 await Task.Delay(1000);
 
                 found = await _fxt.Manager.SearchAsync<TestEntity>(indexName, d =>
-                    d.Ids(qd => qd.Values("2")));
+                    d.Ids(qd => qd.Values(2)));
             }
             finally
             {
                 await _fxt.Manager.Client.Indices.DeleteAsync(indexName);
             }
 
+            var foundOne = found?.FirstOrDefault();
+
             //Assert
             Assert.NotNull(found);
             Assert.Equal(1, found.Count);
+            Assert.NotNull(foundOne);
+            Assert.Equal(2, foundOne.CustomId);
+            Assert.Equal("bar", foundOne.Value);
 
         }
 
         [ElasticsearchType(IdProperty = nameof(Id))]
         public class TestEntity
         {
-            [Text]
-            public string Id { get; set; }
+            [Text(Name = "CustomId")]
+            public int CustomId { get; set; }
 
-            [Text]
+            [Text(Name = "Value")]
             public string Value { get; set; }
 
             

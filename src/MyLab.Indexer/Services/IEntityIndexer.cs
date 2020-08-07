@@ -23,22 +23,22 @@ namespace MyLab.Indexer.Services
     class DefaultEntityIndexer : IEntityIndexer
     {
         private readonly IEsManager _esManager;
-        private readonly string _indexName;
+        private readonly IndexOptions _indexOptions;
 
         public DefaultEntityIndexer(IEsManager esManager, IOptions<IndexerOptions> options)
             :this(esManager, options.Value.Index)
         {
         }
 
-        public DefaultEntityIndexer(IEsManager esManager, string indexName)
+        public DefaultEntityIndexer(IEsManager esManager, IndexOptions indexOptions)
         {
             _esManager = esManager;
-            _indexName = indexName;
+            _indexOptions = indexOptions;
         }
 
         public async Task IndexEntityBatchAsync(DbEntity[] docBatch)
         {
-            var exRes = await _esManager.Client.Indices.ExistsAsync(_indexName);
+            var exRes = await _esManager.Client.Indices.ExistsAsync(_indexOptions.IndexName);
             exRes.ThrowIfInvalid("Can't check index for existing");
 
             var realIndex = GetRealIndexName();
@@ -48,11 +48,11 @@ namespace MyLab.Indexer.Services
                 var crIndexResp = await _esManager.Client.Indices.CreateAsync(realIndex);
                 crIndexResp.ThrowIfInvalid("Can't create index");
 
-                var crAliasResp = await _esManager.Client.Indices.PutAliasAsync(realIndex, _indexName);
+                var crAliasResp = await _esManager.Client.Indices.PutAliasAsync(realIndex, _indexOptions.IndexName);
                 crAliasResp.ThrowIfInvalid("Can't create alias for index");
             }
 
-            var indexer = new DbEntityIndexer(_indexName, _esManager.Client.LowLevel);
+            var indexer = new DbEntityIndexer(_indexOptions, _esManager.Client.LowLevel);
 
             var indexResp = await indexer.Index(docBatch);
             CheckIndexResponse(indexResp);
@@ -85,7 +85,7 @@ namespace MyLab.Indexer.Services
             throw new System.NotImplementedException();
         }
 
-        string GetRealIndexName() => _indexName + "-real";
+        string GetRealIndexName() => _indexOptions.IndexName + "-real";
     }
 
     interface IIndexMappingProvider

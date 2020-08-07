@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyLab.Elastic;
 using MyLab.Elastic.Test;
+using MyLab.Indexer;
 using MyLab.Indexer.Services;
 using Nest;
 using Xunit;
 using Xunit.Abstractions;
+using IndexOptions = MyLab.Indexer.IndexOptions;
 
 namespace IntegrationTests
 {
@@ -27,7 +29,11 @@ namespace IntegrationTests
         public async Task ShouldIndexDocuments()
         {
             //Arrange
-            var indexer = new DbEntityIndexer(_fxt.Manager.IndexName, _fxt.Manager.Client.LowLevel);
+            var options = new IndexOptions()
+            {
+                IndexName = _fxt.Manager.IndexName
+            };
+            var indexer = new DbEntityIndexer(options, _fxt.Manager.Client.LowLevel);
             var testEnt = new DbEntity
             {
                 Id = "foo",

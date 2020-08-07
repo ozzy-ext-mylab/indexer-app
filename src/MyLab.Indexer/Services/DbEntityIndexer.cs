@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
-using Nest;
 
 namespace MyLab.Indexer.Services
 {
     class DbEntityIndexer
     {
-        private readonly string _indexName;
+        private readonly IndexOptions _options;
         private readonly IElasticLowLevelClient _client;
 
-        public DbEntityIndexer(string indexName, IElasticLowLevelClient client)
+        public DbEntityIndexer(IndexOptions options, IElasticLowLevelClient client)
         {
-            _indexName = indexName ?? throw new ArgumentNullException(nameof(indexName));
+            _options = options;
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public async Task<IElasticsearchResponse> Index(IEnumerable<DbEntity> entities)
         {
-            return await _client.BulkAsync<BytesResponse>(_indexName, CreateRequest(entities));
+            return await _client.BulkAsync<BytesResponse>(_options.IndexName, CreateRequest(entities));
         }
 
         string CreateRequest(IEnumerable<DbEntity> entities)
@@ -29,10 +29,17 @@ namespace MyLab.Indexer.Services
 
             foreach (var entity in entities)
             {
-                sb.AppendLine("{\"index\":{}}");
+                var strIdPattern = _options.IdFieldIsString  ? "\"{0}\"" : "{0}";
+                var strId = string.Format(strIdPattern, entity.Id);
 
-                var docBuilder = new IndexDocumentBuilder(entity);
-                sb.AppendLine(docBuilder.BuildJson());
+                sb.AppendLine("{\"index\":{ \"_id\":" + strId +  "}}");
+
+                var props = new Dictionary<string, object>(entity.ExtendedProperties);
+
+                var strJsonProps = props.Select(p => $"\"{p.Key}\":\"{p.Value}\"").ToList();
+                strJsonProps.Add($"\"{_options.IdFieldName ?? nameof(DbEntity.Id)}\":{strId}");
+
+                sb.AppendLine("{" + string.Join(',', strJsonProps) + "}");
             }
 
             return sb.ToString();

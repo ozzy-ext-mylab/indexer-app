@@ -6,9 +6,9 @@
     public class IndexerOptions
     {
         /// <summary>
-        /// Target index name
+        /// Indexing batch size
         /// </summary>
-        public string Index { get; set; }
+        public int BatchSize { get; set; } = 10;
 
         /// <summary>
         /// Queue to listening
@@ -16,14 +16,35 @@
         public string Queue { get; set; }
 
         /// <summary>
-        /// Indexing batch size
-        /// </summary>
-        public int BatchSize { get; set; } = 10;
-
-        /// <summary>
         /// Data base related options
         /// </summary>
         public IndexerDbOptions Db { get; set; }
+
+        /// <summary>
+        /// Contains indexing options
+        /// </summary>
+        public IndexOptions Index { get; set; }
+    }
+
+    /// <summary>
+    /// Contains indexing options
+    /// </summary>
+    public class IndexOptions
+    {
+        /// <summary>
+        /// Target index name
+        /// </summary>
+        public string IndexName { get; set; }
+
+        /// <summary>
+        /// Indexed document identifier field name
+        /// </summary>
+        public string IdFieldName { get; set; } = "Id";
+
+        /// <summary>
+        /// Determines that identifier field is string and must be around with quotes
+        /// </summary>
+        public bool IdFieldIsString { get; set; } = true;
     }
 
     /// <summary>
