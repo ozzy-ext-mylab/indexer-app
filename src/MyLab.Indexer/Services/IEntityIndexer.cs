@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using Elasticsearch.Net;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Options;
 using MyLab.Elastic;
 using MyLab.Logging;
@@ -20,17 +23,22 @@ namespace MyLab.Indexer.Services
     class DefaultEntityIndexer : IEntityIndexer
     {
         private readonly IEsManager _esManager;
-        private readonly IndexerOptions _options;
+        private readonly string _indexName;
 
         public DefaultEntityIndexer(IEsManager esManager, IOptions<IndexerOptions> options)
+            :this(esManager, options.Value.Index)
+        {
+        }
+
+        public DefaultEntityIndexer(IEsManager esManager, string indexName)
         {
             _esManager = esManager;
-            _options = options.Value;
+            _indexName = indexName;
         }
 
         public async Task IndexEntityBatchAsync(DbEntity[] docBatch)
         {
-            var exRes = await _esManager.Client.Indices.ExistsAsync(_options.Index);
+            var exRes = await _esManager.Client.Indices.ExistsAsync(_indexName);
             exRes.ThrowIfInvalid("Can't check index for existing");
 
             var realIndex = GetRealIndexName();
@@ -40,14 +48,26 @@ namespace MyLab.Indexer.Services
                 var crIndexResp = await _esManager.Client.Indices.CreateAsync(realIndex);
                 crIndexResp.ThrowIfInvalid("Can't create index");
 
-                var crAliasResp = await _esManager.Client.Indices.PutAliasAsync(realIndex, _options.Index);
+                var crAliasResp = await _esManager.Client.Indices.PutAliasAsync(realIndex, _indexName);
                 crAliasResp.ThrowIfInvalid("Can't create alias for index");
             }
 
-            var indexer = new DbEntityIndexer(_options.Index, _esManager.Client.LowLevel);
+            var indexer = new DbEntityIndexer(_indexName, _esManager.Client.LowLevel);
 
             var indexResp = await indexer.Index(docBatch);
+            CheckIndexResponse(indexResp);
+        }
+
+        private void CheckIndexResponse(IElasticsearchResponse indexResp)
+        {
             indexResp.ThrowIfInvalid("Can't index entities");
+
+            var respStr = Encoding.UTF8.GetString(indexResp.ApiCall.ResponseBodyInBytes);
+            if (respStr.Contains("\"errors\":true"))
+            {
+                throw new InvalidOperationException("Can't index entities")
+                    .AndFactIs("Response", respStr);
+            }
         }
 
         public Task RemoveEntitiesAsync(string[] ids)
@@ -65,7 +85,7 @@ namespace MyLab.Indexer.Services
             throw new System.NotImplementedException();
         }
 
-        string GetRealIndexName() => _options.Index + "-real";
+        string GetRealIndexName() => _indexName + "-real";
     }
 
     interface IIndexMappingProvider

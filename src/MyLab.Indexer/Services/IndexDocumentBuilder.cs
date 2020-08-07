@@ -22,14 +22,14 @@ namespace MyLab.Indexer.Services
             var root = new XElement("root");
             doc.Add(root);
 
-            root.Add(new XElement(nameof(DbEntity.Id), _initial.Id));
+            root.Add(new XElement("_id", _initial.Id));
 
             if(_initial.ExtendedProperties != null)
             {
                 foreach (var property in _initial.ExtendedProperties)
                 {
                     if (property.Value != null)
-                        root.Add(new XElement(property.Key, property.Value.ToString()));
+                        root.Add(new XElement(property.Key, property.Value));
                 }
             }
 
