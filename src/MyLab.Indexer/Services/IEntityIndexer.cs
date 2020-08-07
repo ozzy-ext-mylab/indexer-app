@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Options;
 using MyLab.Elastic;
 using MyLab.Logging;
+using Nest;
 
 namespace MyLab.Indexer.Services
 {
@@ -70,9 +71,14 @@ namespace MyLab.Indexer.Services
             }
         }
 
-        public Task RemoveEntitiesAsync(string[] ids)
+        public async Task RemoveEntitiesAsync(string[] ids)
         {
-            throw new System.NotImplementedException();
+            var resp = await _esManager.Client.DeleteByQueryAsync<DbEntity>(d => 
+                d.Index(_indexOptions.IndexName)
+                    .Query(qd => 
+                        qd.Ids(idsQd => 
+                            idsQd.Values(ids))));
+            resp.ThrowIfInvalid("Can't remove entities by identifiers");
         }
 
         public Task StartReindexAsync()
