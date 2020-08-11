@@ -18,7 +18,7 @@ namespace MyLab.Indexer
             {
                 IntegrateEsTools = true,
                 Configuration = config,
-                EntityIndexerRegistrar = new GenericSingletonRegistrar<IEntityIndexManager, DefaultEntityIndexManager>(),
+                EntityIndexManagerRegistrar = new GenericSingletonRegistrar<IEntityIndexManager, DefaultEntityIndexManager>(),
                 EntityStorageRegistrar = new GenericSingletonRegistrar<IOriginEntityStorage, DefaultOriginEntityStorage>(),
                 ReportersRegistrar = new GenericSingletonRegistrar<IReporter,DefaultReporter>()
             });
@@ -29,7 +29,7 @@ namespace MyLab.Indexer
             if (icfg == null) throw new ArgumentNullException(nameof(icfg));
 
             if(icfg.Configuration == null) throw new InvalidOperationException("Configuration is null");
-            if(icfg.EntityIndexerRegistrar == null) throw new InvalidOperationException("EntityIndexerRegistrar is null");
+            if(icfg.EntityIndexManagerRegistrar == null) throw new InvalidOperationException("EntityIndexManagerRegistrar is null");
 
             var options = GetOptions(icfg.Configuration);
 
@@ -38,7 +38,7 @@ namespace MyLab.Indexer
             var dataProvider = GetDataProvider(options.Db.DbProviderName);
             var indexMsgConsumer = new MqConsumer<IndexingMsg, IndexerConsumerLogic>(options.Queue);
 
-            icfg.EntityIndexerRegistrar.Register(srv);
+            icfg.EntityIndexManagerRegistrar.Register(srv);
             icfg.EntityStorageRegistrar.Register(srv);
 
             srv.AddDbTools(icfg.Configuration, dataProvider);
@@ -80,7 +80,7 @@ namespace MyLab.Indexer
 
     class IntegrationConfiguration
     {
-        public ISingletonRegistrar<IEntityIndexManager> EntityIndexerRegistrar { get; set; }
+        public ISingletonRegistrar<IEntityIndexManager> EntityIndexManagerRegistrar { get; set; }
 
         public ISingletonRegistrar<IOriginEntityStorage> EntityStorageRegistrar { get; set; }
         public ISingletonRegistrar<IReporter> ReportersRegistrar { get; set; }
