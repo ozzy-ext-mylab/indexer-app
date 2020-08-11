@@ -62,16 +62,18 @@ namespace MyLab.Indexer.Services
 
         private async Task Reindex()
         {
-            await _indexManager.StartReindexAsync();
+            //await _indexManager.StartReindexAsync();
 
-            await foreach (var entityBatch in _entityProvider.ProvideAllEntities())
-            {
-                var docs = entityBatch.ToArray();
+            //await foreach (var entityBatch in _entityProvider.ProvideAllEntities())
+            //{
+            //    var docs = entityBatch.ToArray();
 
-                await _indexManager.IndexEntityBatchAsync(docs);
-            }
+            //    await _indexManager.IndexEntityBatchAsync(docs);
+            //}
 
-            await _indexManager.EndReindexAsync();
+            //await _indexManager.EndReindexAsync();
+
+            throw new NotImplementedException();
         }
     }
 }
