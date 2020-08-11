@@ -33,11 +33,11 @@ namespace UnitTests
             var idsForUpdate = new[] {"1", "2", "3"};
              
             var source = new TestEntitySource();
-            var indexer = new TestEntityIndexer();
+            var indexer = new TestEntityIndexManager();
             var icfg = new IntegrationConfiguration
             {
                 Configuration = config,
-                EntityIndexerRegistrar = new ObjectSingletonRegistrar<IEntityIndexer>(indexer),
+                EntityIndexManagerRegistrar = new ObjectSingletonRegistrar<IEntityIndexManager>(indexer),
                 EntityStorageRegistrar = new ObjectSingletonRegistrar<IOriginEntityStorage>(source),
                 OverrideMqInitiatorRegistrar = new InputMessageEmulatorRegistrar()
             };
@@ -75,11 +75,11 @@ namespace UnitTests
             var config = CreateConfig();
             
             var source = new TestEntitySource();
-            var indexer = new TestEntityIndexer(new []{ new DbEntity{Id = "100"}, new DbEntity(){ Id = "200"}, });
+            var indexer = new TestEntityIndexManager(new []{ new DbEntity{Id = "100"}, new DbEntity(){ Id = "200"}, });
             var icfg = new IntegrationConfiguration
             {
                 Configuration = config,
-                EntityIndexerRegistrar = new ObjectSingletonRegistrar<IEntityIndexer>(indexer),
+                EntityIndexManagerRegistrar = new ObjectSingletonRegistrar<IEntityIndexManager>(indexer),
                 EntityStorageRegistrar = new ObjectSingletonRegistrar<IOriginEntityStorage>(source),
                 OverrideMqInitiatorRegistrar = new InputMessageEmulatorRegistrar()
             };
@@ -118,12 +118,12 @@ namespace UnitTests
             var idsForDelete = new[] { "1", "2", "3" };
 
             var source = new TestEntitySource();
-            var indexer = new TestEntityIndexer(source);
+            var indexer = new TestEntityIndexManager(source);
             
             var icfg = new IntegrationConfiguration
             {
                 Configuration = config,
-                EntityIndexerRegistrar = new ObjectSingletonRegistrar<IEntityIndexer>(indexer),
+                EntityIndexManagerRegistrar = new ObjectSingletonRegistrar<IEntityIndexManager>(indexer),
                 EntityStorageRegistrar = new ObjectSingletonRegistrar<IOriginEntityStorage>(source),
                 OverrideMqInitiatorRegistrar = new InputMessageEmulatorRegistrar()
             };
@@ -175,12 +175,12 @@ namespace UnitTests
                 .Build();
         }
 
-        class TestEntityIndexer : IEntityIndexer
+        class TestEntityIndexManager : IEntityIndexManager
         {
             private readonly List<DbEntity> _indexed;
             public ReadOnlyCollection<DbEntity> Indexed {get;}
 
-            public TestEntityIndexer(IEnumerable<DbEntity> initial = null)
+            public TestEntityIndexManager(IEnumerable<DbEntity> initial = null)
             {
                 _indexed = initial != null
                     ? new List<DbEntity>(initial)

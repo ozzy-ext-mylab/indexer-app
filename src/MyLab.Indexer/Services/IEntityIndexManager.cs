@@ -10,7 +10,7 @@ using Nest;
 
 namespace MyLab.Indexer.Services
 {
-    interface IEntityIndexer
+    interface IEntityIndexManager
     {
         Task IndexEntityBatchAsync(DbEntity[] docBatch);
 
@@ -21,17 +21,17 @@ namespace MyLab.Indexer.Services
         Task EndReindexAsync();
     }
 
-    class DefaultEntityIndexer : IEntityIndexer
+    class DefaultEntityIndexManager : IEntityIndexManager
     {
         private readonly IEsManager _esManager;
         private readonly IndexOptions _indexOptions;
 
-        public DefaultEntityIndexer(IEsManager esManager, IOptions<IndexerOptions> options)
+        public DefaultEntityIndexManager(IEsManager esManager, IOptions<IndexerOptions> options)
             :this(esManager, options.Value.Index)
         {
         }
 
-        public DefaultEntityIndexer(IEsManager esManager, IndexOptions indexOptions)
+        public DefaultEntityIndexManager(IEsManager esManager, IndexOptions indexOptions)
         {
             _esManager = esManager;
             _indexOptions = indexOptions;

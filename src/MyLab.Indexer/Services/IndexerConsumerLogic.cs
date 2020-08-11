@@ -8,7 +8,7 @@ namespace MyLab.Indexer.Services
     class IndexerConsumerLogic : IMqConsumerLogic<IndexingMsg>
     {
         private readonly OriginEntityProvider _entityProvider;
-        private readonly IEntityIndexer _indexer;
+        private readonly IEntityIndexManager _indexManager;
         private readonly IReporter _reporter;
 
         /// <summary>
@@ -16,11 +16,11 @@ namespace MyLab.Indexer.Services
         /// </summary>
         public IndexerConsumerLogic(
             OriginEntityProvider entityProvider,
-            IEntityIndexer indexer,
+            IEntityIndexManager indexManager,
             IReporter reporter = null)
         {
             _entityProvider = entityProvider ?? throw new ArgumentNullException(nameof(entityProvider));
-            _indexer = indexer ?? throw new ArgumentNullException(nameof(indexer));
+            _indexManager = indexManager ?? throw new ArgumentNullException(nameof(indexManager));
             _reporter = reporter;
         }
 
@@ -30,7 +30,7 @@ namespace MyLab.Indexer.Services
             {
                 await Reindex();
             }
-            if(message.Payload.Update != null)
+            if(message.Payload.Update != null && message.Payload.Update.Length > 0)
                 await Update(message.Payload.Update);
 
             var dList = message.Payload.Delete;
@@ -40,7 +40,7 @@ namespace MyLab.Indexer.Services
 
         private async Task Delete(string[] dList)
         {
-            await _indexer.RemoveEntitiesAsync(dList);
+            await _indexManager.RemoveEntitiesAsync(dList);
         }
 
         private async Task Update(string[] updateList)
@@ -51,7 +51,7 @@ namespace MyLab.Indexer.Services
             {
                 var docs = entityBatch.ToArray();
 
-                await _indexer.IndexEntityBatchAsync(docs);
+                await _indexManager.IndexEntityBatchAsync(docs);
 
                 lost?.RemoveAll(id => entityBatch.Any(e => e.Id == id));
             }
@@ -62,16 +62,16 @@ namespace MyLab.Indexer.Services
 
         private async Task Reindex()
         {
-            await _indexer.StartReindexAsync();
+            await _indexManager.StartReindexAsync();
 
             await foreach (var entityBatch in _entityProvider.ProvideAllEntities())
             {
                 var docs = entityBatch.ToArray();
 
-                await _indexer.IndexEntityBatchAsync(docs);
+                await _indexManager.IndexEntityBatchAsync(docs);
             }
 
-            await _indexer.EndReindexAsync();
+            await _indexManager.EndReindexAsync();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace IntegrationTests
         {
             //Arrange
             var opt = GenerateIndexName();
-            var indexer = new DefaultEntityIndexer(_fxt.Manager,opt);
+            var indexer = new DefaultEntityIndexManager(_fxt.Manager,opt);
             var testEnt = CreateDnEnt("2", "bar");
             
             await CreateIndexAsync(opt.IndexName);
@@ -65,7 +65,7 @@ namespace IntegrationTests
         {
             //Arrange
             var opt = GenerateIndexName();
-            var indexer = new DefaultEntityIndexer(_fxt.Manager, opt);
+            var indexer = new DefaultEntityIndexManager(_fxt.Manager, opt);
             var entities = new[]
             {
                 CreateDnEnt("0", "foo"),
@@ -103,9 +103,9 @@ namespace IntegrationTests
             Assert.Equal("foo", foundOne.Value);
         }
 
-        async Task IndexItemsAsync(DefaultEntityIndexer defaultEntityIndexer, params DbEntity[] entities)
+        async Task IndexItemsAsync(DefaultEntityIndexManager defaultEntityIndexManager, params DbEntity[] entities)
         {
-            await defaultEntityIndexer.IndexEntityBatchAsync(entities);
+            await defaultEntityIndexManager.IndexEntityBatchAsync(entities);
             await WaitingForEsAsync();
         }
 

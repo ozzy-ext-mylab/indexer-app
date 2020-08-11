@@ -18,13 +18,13 @@ namespace MyLab.Indexer
             {
                 IntegrateEsTools = true,
                 Configuration = config,
-                EntityIndexerRegistrar = new GenericSingletonRegistrar<IEntityIndexer, DefaultEntityIndexer>(),
+                EntityIndexerRegistrar = new GenericSingletonRegistrar<IEntityIndexManager, DefaultEntityIndexManager>(),
                 EntityStorageRegistrar = new GenericSingletonRegistrar<IOriginEntityStorage, DefaultOriginEntityStorage>(),
                 ReportersRegistrar = new GenericSingletonRegistrar<IReporter,DefaultReporter>()
             });
         }
 
-        public static IServiceCollection AddIndexerLogic(this IServiceCollection srv, IntegrationConfiguration icfg)
+        internal static IServiceCollection AddIndexerLogic(this IServiceCollection srv, IntegrationConfiguration icfg)
         {
             if (icfg == null) throw new ArgumentNullException(nameof(icfg));
 
@@ -80,7 +80,7 @@ namespace MyLab.Indexer
 
     class IntegrationConfiguration
     {
-        public ISingletonRegistrar<IEntityIndexer> EntityIndexerRegistrar { get; set; }
+        public ISingletonRegistrar<IEntityIndexManager> EntityIndexerRegistrar { get; set; }
 
         public ISingletonRegistrar<IOriginEntityStorage> EntityStorageRegistrar { get; set; }
         public ISingletonRegistrar<IReporter> ReportersRegistrar { get; set; }
