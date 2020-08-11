@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyLab.Db;
 using MyLab.Elastic;
 
 namespace MyLab.Indexer.Services
 {
-    interface IEntityReIndexer : IDisposable
-    {
-        Task IndexEntityBatchAsync(DbEntity[] docBatch);
-        Task Commit();
-
-        Task Rollback();
-    }
-
     class DefaultEntityReIndexer : IEntityReIndexer
     {
         private readonly IEsManager _esMgr;

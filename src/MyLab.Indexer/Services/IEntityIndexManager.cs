@@ -10,6 +10,6 @@ namespace MyLab.Indexer.Services
 
         Task RemoveEntitiesAsync(string[] ids);
 
-        IEntityReIndexer Reindex();
+        Task<IEntityReIndexer> StartReindexAsync();
     }
 }

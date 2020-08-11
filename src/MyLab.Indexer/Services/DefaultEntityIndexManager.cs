@@ -68,9 +68,12 @@ namespace MyLab.Indexer.Services
             resp.ThrowIfInvalid("Can't remove entities by identifiers");
         }
 
-        public IEntityReIndexer Reindex()
+        public async Task<IEntityReIndexer> StartReindexAsync()
         {
-            throw new NotImplementedException();
+            var reindexer = new DefaultEntityReIndexer(_indexOptions.IndexName, _esManager);
+            await reindexer.Begin();
+
+            return reindexer;
         }
 
         public static string GetRealIndexName(string originIndexName) => originIndexName + "-real";
