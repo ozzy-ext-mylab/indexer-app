@@ -3,7 +3,7 @@ using LinqToDB.Mapping;
 
 namespace MyLab.Indexer.Tools
 {
-    class OriginEntity
+    public class OriginEntity
     {
         [PrimaryKey]
         public string Id { get; set; }

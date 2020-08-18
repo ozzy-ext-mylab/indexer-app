@@ -16,36 +16,18 @@ namespace MyLab.Indexer.Tools
 
         public async Task<IIndexer> Provide()
         {
+            if (await _indexManager.IsIndexExists(_indexName))
+                return await _indexManager.CreateIndexerForExistent(_indexName);
+
             var evenIndexName = GetEvenIndex(_indexName);
-            if (await _indexManager.IsIndexExists(evenIndexName))
-                return await _indexManager.CreateIndexerForExistent(evenIndexName);
-
-            var oddIndexName = GetOddIndex(_indexName);
-            if (await _indexManager.IsIndexExists(oddIndexName))
-                return await _indexManager.CreateIndexerForExistent(oddIndexName);
-
-            var indexer = await _indexManager.CreateIndex(evenIndexName);
+            
+            if (!await _indexManager.IsIndexExists(evenIndexName))
+                await _indexManager.CreateIndex(evenIndexName);
             await _indexManager.CreateAlias(_indexName, evenIndexName);
 
-            return indexer;
+            return await _indexManager.CreateIndexerForExistent(_indexName);
         }
 
-        string GetEvenIndex(string baseIndexName) => baseIndexName + "-real-even";
-        string GetOddIndex(string baseIndexName) => baseIndexName + "-real-odd";
-    }
-
-    interface IIndexer
-    {
-        Task Index(OriginEntity[] entities);
-    }
-
-    interface IIndexManager
-    {
-        Task<IIndexer> CreateIndexerForExistent(string indexName);
-
-        Task<IIndexer> CreateIndex(string indexName);
-        Task CreateAlias(string alias, string indexName);
-
-        Task<bool> IsIndexExists(string indexName);
+        public static string GetEvenIndex(string baseIndexName) => baseIndexName + "-real-even";
     }
 }
