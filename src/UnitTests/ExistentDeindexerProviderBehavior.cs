@@ -19,11 +19,11 @@ namespace UnitTests
             var indexMgr = new Mock<IIndexManager>();
 
             indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == "foo")))
+                .Setup(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(true));
 
             indexMgr
-                .Setup(m => m.CreateDeindexerForExistent(It.Is<string>(s => s == "foo")))
+                .Setup(m => m.CreateDeindexerForExistentAsync(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(originDeindexer.Object));
 
             var provider = new ExistentDeindexerProvider("foo", indexMgr.Object);
@@ -34,8 +34,8 @@ namespace UnitTests
             //Assert
             Assert.NotNull(deindexer);
             
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.CreateDeindexerForExistent(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.CreateDeindexerForExistentAsync(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
         }
 
@@ -48,7 +48,7 @@ namespace UnitTests
             var indexMgr = new Mock<IIndexManager>();
 
             indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == "foo")))
+                .Setup(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(false));
 
             var provider = new ExistentDeindexerProvider("foo", indexMgr.Object);
@@ -59,7 +59,7 @@ namespace UnitTests
             //Assert
             Assert.Null(deindexer);
 
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
         }
     }

@@ -5,14 +5,17 @@ namespace MyLab.Indexer.Tools
 {
     class ReindexOperator : IAsyncDisposable
     {
-        public string IndexName { get; }
         private readonly IIndexManager _indexManager;
 
+        public string IndexName { get; }
+        private string AliasName { get; }
+        
         ReindexOperator(string aliasName, string indexName, IIndexManager indexManager)
         {
             if (string.IsNullOrEmpty(aliasName))
                 throw new ArgumentException("Value cannot be null or empty.", nameof(aliasName));
             IndexName = indexName;
+            AliasName = aliasName;
             _indexManager = indexManager ?? throw new ArgumentNullException(nameof(indexManager));
         }
 
@@ -24,24 +27,38 @@ namespace MyLab.Indexer.Tools
 
             var indexName = NewIndexNameBuilder.Build(aliasName);
 
-            await indexManager.CreateIndex(indexName);
+            await indexManager.CreateIndexAsync(indexName);
 
             return new ReindexOperator(aliasName, indexName, indexManager);
         }
 
         public async Task<IIndexer> GetIndexerAsync()
         {
-            return await _indexManager.CreateIndexerForExistent(IndexName);
+            return await _indexManager.CreateIndexerForExistentAsync(IndexName);
         }
 
-        //public Task CommitAsync()
-        //{
+        public async Task CommitAsync()
+        {
+            var isAliasExists = await _indexManager.IsIndexExistsAsync(AliasName);
+            string[] oldIndices = null;
 
-        //}
+            if (isAliasExists)
+                oldIndices = await _indexManager.GetAliasIndices(AliasName);
+
+            await _indexManager.AliasIndex(AliasName, IndexName);
+
+            if (oldIndices != null)
+            {
+                foreach (var oldIndex in oldIndices)
+                {
+                    await _indexManager.RemoveIndexAsync(oldIndex);
+                }
+            }
+        }
 
         public async ValueTask DisposeAsync()
         {
-            await _indexManager.RemoveIndex(IndexName);
+            await _indexManager.RemoveIndexAsync(IndexName);
         }
     }
 }

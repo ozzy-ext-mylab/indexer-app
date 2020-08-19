@@ -4,21 +4,23 @@ namespace MyLab.Indexer.Tools
 {
     public interface IIndexManager
     {
-        Task<IIndexer> CreateIndexerForExistent(string indexName);
+        Task<IIndexer> CreateIndexerForExistentAsync(string indexName);
 
-        Task<IDeindexer> CreateDeindexerForExistent(string indexName);
+        Task<IDeindexer> CreateDeindexerForExistentAsync(string indexName);
 
-        Task<IIndexer> CreateIndex(string indexName);
+        Task<IIndexer> CreateIndexAsync(string indexName);
 
-        Task RemoveIndex(string indexName);
+        Task RemoveIndexAsync(string indexName);
 
-        Task CreateAlias(string alias, string indexName);
+        Task AliasIndex(string alias, string indexName);
 
-        Task<bool> IsIndexExists(string indexName);
+        Task<bool> IsIndexExistsAsync(string indexName);
+
+        Task<string[]> GetAliasIndices(string aliasName);
     }
 
     public interface IDeindexer
     {
-        Task Deindex(string[] ids);
+        Task DeindexAsync(string[] ids);
     }
 }

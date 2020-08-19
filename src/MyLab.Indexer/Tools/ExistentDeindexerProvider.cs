@@ -18,8 +18,8 @@ namespace MyLab.Indexer.Tools
 
         public async Task<IDeindexer> ProvideAsync()
         {
-            return await _indexManager.IsIndexExists(_indexName)
-                ? await _indexManager.CreateDeindexerForExistent(_indexName)
+            return await _indexManager.IsIndexExistsAsync(_indexName)
+                ? await _indexManager.CreateDeindexerForExistentAsync(_indexName)
                 : await Task.FromResult<IDeindexer>(null);
         }
     }

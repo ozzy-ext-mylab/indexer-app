@@ -16,15 +16,15 @@ namespace MyLab.Indexer.Tools
 
         public async Task<IIndexer> ProvideAsync()
         {
-            if (await _indexManager.IsIndexExists(_aliasName))
-                return await _indexManager.CreateIndexerForExistent(_aliasName);
+            if (await _indexManager.IsIndexExistsAsync(_aliasName))
+                return await _indexManager.CreateIndexerForExistentAsync(_aliasName);
 
             var indexName = NewIndexNameBuilder.Build(_aliasName);
             
-            await _indexManager.CreateIndex(indexName);
-            await _indexManager.CreateAlias(_aliasName, indexName);
+            await _indexManager.CreateIndexAsync(indexName);
+            await _indexManager.AliasIndex(_aliasName, indexName);
 
-            return await _indexManager.CreateIndexerForExistent(_aliasName);
+            return await _indexManager.CreateIndexerForExistentAsync(_aliasName);
         }
     }
 }

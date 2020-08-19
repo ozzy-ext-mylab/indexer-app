@@ -15,11 +15,11 @@ namespace UnitTests
             var indexMgr = new Moq.Mock<IIndexManager>();
 
             indexMgr
-                .Setup(m => m.CreateIndexerForExistent(It.IsAny<string>()))
+                .Setup(m => m.CreateIndexerForExistentAsync(It.IsAny<string>()))
                 .Returns(() => Task.FromResult(indexerOrigin));
             
             indexMgr
-                .Setup(m => m.IsIndexExists(It.IsAny<string>()))
+                .Setup(m => m.IsIndexExistsAsync(It.IsAny<string>()))
                 .Returns(() => Task.FromResult(true));
 
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
@@ -29,8 +29,8 @@ namespace UnitTests
 
             //Assert
 
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.CreateIndexerForExistent(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.CreateIndexerForExistentAsync(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
 
             Assert.Equal(indexerOrigin, indexer);
@@ -44,11 +44,11 @@ namespace UnitTests
             var indexMgr = new Moq.Mock<IIndexManager>();
 
             indexMgr
-                .Setup(m => m.CreateIndexerForExistent(It.IsAny<string>()))
+                .Setup(m => m.CreateIndexerForExistentAsync(It.IsAny<string>()))
                 .Returns(() => Task.FromResult(indexerOrigin));
 
             indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == "foo")))
+                .Setup(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(false));
 
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
@@ -58,10 +58,10 @@ namespace UnitTests
 
             //Assert
 
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.CreateIndex(It.IsAny<string>()));
-            indexMgr.Verify(m => m.CreateAlias(It.Is<string>(s => s == "foo"),It.IsAny<string>()));
-            indexMgr.Verify(m => m.CreateIndexerForExistent(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")));
+            indexMgr.Verify(m => m.CreateIndexAsync(It.IsAny<string>()));
+            indexMgr.Verify(m => m.AliasIndex(It.Is<string>(s => s == "foo"),It.IsAny<string>()));
+            indexMgr.Verify(m => m.CreateIndexerForExistentAsync(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
 
             Assert.Equal(indexerOrigin, indexer);
