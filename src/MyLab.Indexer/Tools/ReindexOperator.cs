@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 
 namespace MyLab.Indexer.Tools
 {
-    class ReindexOperator : IAsyncDisposable
+    class ReindexOperator : IAsyncDisposable, IIndexerProvider
     {
         private readonly IIndexManager _indexManager;
+        private bool _commited;
 
         public string IndexName { get; }
         private string AliasName { get; }
@@ -32,7 +33,7 @@ namespace MyLab.Indexer.Tools
             return new ReindexOperator(aliasName, indexName, indexManager);
         }
 
-        public async Task<IIndexer> GetIndexerAsync()
+        public async Task<IIndexer> ProvideIndexerAsync()
         {
             return await _indexManager.CreateIndexerForExistentAsync(IndexName);
         }
@@ -54,11 +55,14 @@ namespace MyLab.Indexer.Tools
                     await _indexManager.RemoveIndexAsync(oldIndex);
                 }
             }
+
+            _commited = true;
         }
 
         public async ValueTask DisposeAsync()
         {
-            await _indexManager.RemoveIndexAsync(IndexName);
+            if(!_commited)
+                await _indexManager.RemoveIndexAsync(IndexName);
         }
     }
 }

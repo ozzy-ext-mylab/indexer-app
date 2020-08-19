@@ -3,18 +3,18 @@ using System.Threading.Tasks;
 
 namespace MyLab.Indexer.Tools
 {
-    class ReadyIndexProvider
+    class ReadyIndexProvider : IIndexerProvider
     {
         private readonly IIndexManager _indexManager;
         private readonly string _aliasName;
 
-        public ReadyIndexProvider(IIndexManager indexManager, string aliasName)
+        public ReadyIndexProvider(string aliasName, IIndexManager indexManager)
         {
             _indexManager = indexManager ?? throw new ArgumentNullException(nameof(indexManager));
             _aliasName = aliasName;
         }
 
-        public async Task<IIndexer> ProvideAsync()
+        public async Task<IIndexer> ProvideIndexerAsync()
         {
             if (await _indexManager.IsIndexExistsAsync(_aliasName))
                 return await _indexManager.CreateIndexerForExistentAsync(_aliasName);

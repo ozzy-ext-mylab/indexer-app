@@ -51,7 +51,7 @@ namespace UnitTests
                 .Returns(() => Task.FromResult(expectedIndexer.Object));
 
             //Act
-            var indexer = await reindexer.GetIndexerAsync();
+            var indexer = await reindexer.ProvideIndexerAsync();
             
             //Assert
             Assert.Equal(expectedIndexer.Object, indexer);

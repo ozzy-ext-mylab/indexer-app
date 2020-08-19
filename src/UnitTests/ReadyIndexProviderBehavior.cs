@@ -25,7 +25,7 @@ namespace UnitTests
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
 
             //Act
-            var indexer = await provider.ProvideAsync();
+            var indexer = await provider.ProvideIndexerAsync();
 
             //Assert
 
@@ -54,7 +54,7 @@ namespace UnitTests
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
 
             //Act
-            var indexer = await provider.ProvideAsync();
+            var indexer = await provider.ProvideIndexerAsync();
 
             //Assert
 

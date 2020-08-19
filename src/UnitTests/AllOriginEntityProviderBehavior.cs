@@ -12,7 +12,7 @@ namespace UnitTests
         {
             //Arrange
             var src = new SimpleTestOriginEntitySource();
-            var provider = new AllOriginEntityProvider();
+            var provider = new AllOriginEntityProviderLogic();
             OriginEntity[] page = null;
 
             //Act
@@ -32,7 +32,7 @@ namespace UnitTests
         {
             //Arrange
             var src = new SimpleTestOriginEntitySource();
-            var provider = new AllOriginEntityProvider();
+            var provider = new AllOriginEntityProviderLogic();
             var buffer = new List<OriginEntity>();
 
             //Act

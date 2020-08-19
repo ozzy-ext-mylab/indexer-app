@@ -4,6 +4,6 @@ namespace MyLab.Indexer.Tools
 {
     public interface IIndexer
     {
-        Task Index(OriginEntity[] entities);
+        Task IndexAsync(OriginEntity[] entities);
     }
 }

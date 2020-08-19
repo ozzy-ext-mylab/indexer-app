@@ -2,7 +2,7 @@
 
 namespace MyLab.Indexer.Tools
 {
-    interface IOriginEntityProvider 
+    interface IOriginEntityProviderLogic 
     {
         IAsyncEnumerable<OriginEntity[]> Provide(IOriginEntitySource src, int pageSize);
     }

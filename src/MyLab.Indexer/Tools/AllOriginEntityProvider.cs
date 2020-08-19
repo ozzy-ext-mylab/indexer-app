@@ -7,7 +7,7 @@ using LinqToDB;
 
 namespace MyLab.Indexer.Tools
 {
-    class AllOriginEntityProvider : IOriginEntityProvider
+    class AllOriginEntityProviderLogic : IOriginEntityProviderLogic
     {
         public IAsyncEnumerable<OriginEntity[]> Provide(IOriginEntitySource src, int pageSize)
         {

@@ -18,7 +18,7 @@ namespace UnitTests
                 .Select(e => e.Id)
                 .ToArray();
             
-            var provider = new SelectiveOriginEntityProvider(ids);
+            var provider = new SelectiveOriginEntityProviderLogic(ids);
 
             OriginEntity[] page = null;
 
@@ -45,7 +45,7 @@ namespace UnitTests
                 .Select(e => e.Id)
                 .ToArray();
 
-            var provider = new SelectiveOriginEntityProvider(ids);
+            var provider = new SelectiveOriginEntityProviderLogic(ids);
             var buffer = new List<OriginEntity>();
 
             //Act

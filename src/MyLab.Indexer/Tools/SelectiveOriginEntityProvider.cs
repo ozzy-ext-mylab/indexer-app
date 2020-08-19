@@ -7,11 +7,11 @@ using LinqToDB;
 
 namespace MyLab.Indexer.Tools
 {
-    class SelectiveOriginEntityProvider : IOriginEntityProvider
+    class SelectiveOriginEntityProviderLogic : IOriginEntityProviderLogic
     {
         private readonly string[] _ids;
 
-        public SelectiveOriginEntityProvider(string[] ids)
+        public SelectiveOriginEntityProviderLogic(string[] ids)
         {
             _ids = ids ?? throw new ArgumentNullException(nameof(ids));
         }
