@@ -16,7 +16,7 @@ namespace MyLab.Indexer.Tools
             _indexManager = indexManager ?? throw new ArgumentNullException(nameof(indexManager));
         }
 
-        public async Task<IDeindexer> Provide()
+        public async Task<IDeindexer> ProvideAsync()
         {
             return await _indexManager.IsIndexExists(_indexName)
                 ? await _indexManager.CreateDeindexerForExistent(_indexName)

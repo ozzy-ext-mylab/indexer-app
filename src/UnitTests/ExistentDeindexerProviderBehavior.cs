@@ -29,7 +29,7 @@ namespace UnitTests
             var provider = new ExistentDeindexerProvider("foo", indexMgr.Object);
 
             //Act
-            var deindexer = await provider.Provide();
+            var deindexer = await provider.ProvideAsync();
 
             //Assert
             Assert.NotNull(deindexer);
@@ -54,7 +54,7 @@ namespace UnitTests
             var provider = new ExistentDeindexerProvider("foo", indexMgr.Object);
 
             //Act
-            var deindexer = await provider.Provide();
+            var deindexer = await provider.ProvideAsync();
 
             //Assert
             Assert.Null(deindexer);

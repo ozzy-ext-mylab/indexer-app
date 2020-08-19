@@ -25,48 +25,11 @@ namespace UnitTests
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
 
             //Act
-            var indexer = await provider.Provide();
+            var indexer = await provider.ProvideAsync();
 
             //Assert
 
             indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.CreateIndexerForExistent(It.Is<string>(s => s == "foo")));
-            indexMgr.VerifyNoOtherCalls();
-
-            Assert.Equal(indexerOrigin, indexer);
-        }
-
-        [Fact]
-        public async Task ShouldCreateAliasForExistentEvenIndex()
-        {
-            //Arrange
-            var indexerOrigin = new Moq.Mock<IIndexer>().Object;
-            var indexMgr = new Moq.Mock<IIndexManager>();
-            var evenIndexName = ReadyIndexProvider.GetEvenIndex("foo");
-
-            indexMgr
-                .Setup(m => m.CreateIndexerForExistent(It.IsAny<string>()))
-                .Returns(() => Task.FromResult(indexerOrigin));
-
-            indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == "foo")))
-                .Returns(() => Task.FromResult(false));
-            indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == evenIndexName)))
-                .Returns(() => Task.FromResult(true));
-
-            var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
-
-            //Act
-            var indexer = await provider.Provide();
-
-            //Assert
-
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == evenIndexName)));
-            indexMgr.Verify(m => m.CreateAlias(
-                It.Is<string>(s => s == "foo"),
-                It.Is<string>(s => s == evenIndexName)));
             indexMgr.Verify(m => m.CreateIndexerForExistent(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
 
@@ -79,7 +42,6 @@ namespace UnitTests
             //Arrange
             var indexerOrigin = new Moq.Mock<IIndexer>().Object;
             var indexMgr = new Moq.Mock<IIndexManager>();
-            var evenIndexName = ReadyIndexProvider.GetEvenIndex("foo");
 
             indexMgr
                 .Setup(m => m.CreateIndexerForExistent(It.IsAny<string>()))
@@ -88,23 +50,17 @@ namespace UnitTests
             indexMgr
                 .Setup(m => m.IsIndexExists(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(false));
-            indexMgr
-                .Setup(m => m.IsIndexExists(It.Is<string>(s => s == evenIndexName)))
-                .Returns(() => Task.FromResult(false));
 
             var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
 
             //Act
-            var indexer = await provider.Provide();
+            var indexer = await provider.ProvideAsync();
 
             //Assert
 
             indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == "foo")));
-            indexMgr.Verify(m => m.IsIndexExists(It.Is<string>(s => s == evenIndexName)));
-            indexMgr.Verify(m => m.CreateIndex(It.Is<string>(s => s == evenIndexName)));
-            indexMgr.Verify(m => m.CreateAlias(
-                It.Is<string>(s => s == "foo"),
-                It.Is<string>(s => s == evenIndexName)));
+            indexMgr.Verify(m => m.CreateIndex(It.IsAny<string>()));
+            indexMgr.Verify(m => m.CreateAlias(It.Is<string>(s => s == "foo"),It.IsAny<string>()));
             indexMgr.Verify(m => m.CreateIndexerForExistent(It.Is<string>(s => s == "foo")));
             indexMgr.VerifyNoOtherCalls();
 

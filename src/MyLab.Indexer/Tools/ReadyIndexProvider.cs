@@ -6,28 +6,25 @@ namespace MyLab.Indexer.Tools
     class ReadyIndexProvider
     {
         private readonly IIndexManager _indexManager;
-        private readonly string _indexName;
+        private readonly string _aliasName;
 
-        public ReadyIndexProvider(IIndexManager indexManager, string indexName)
+        public ReadyIndexProvider(IIndexManager indexManager, string aliasName)
         {
             _indexManager = indexManager ?? throw new ArgumentNullException(nameof(indexManager));
-            _indexName = indexName;
+            _aliasName = aliasName;
         }
 
-        public async Task<IIndexer> Provide()
+        public async Task<IIndexer> ProvideAsync()
         {
-            if (await _indexManager.IsIndexExists(_indexName))
-                return await _indexManager.CreateIndexerForExistent(_indexName);
+            if (await _indexManager.IsIndexExists(_aliasName))
+                return await _indexManager.CreateIndexerForExistent(_aliasName);
 
-            var evenIndexName = GetEvenIndex(_indexName);
+            var indexName = NewIndexNameBuilder.Build(_aliasName);
             
-            if (!await _indexManager.IsIndexExists(evenIndexName))
-                await _indexManager.CreateIndex(evenIndexName);
-            await _indexManager.CreateAlias(_indexName, evenIndexName);
+            await _indexManager.CreateIndex(indexName);
+            await _indexManager.CreateAlias(_aliasName, indexName);
 
-            return await _indexManager.CreateIndexerForExistent(_indexName);
+            return await _indexManager.CreateIndexerForExistent(_aliasName);
         }
-
-        public static string GetEvenIndex(string baseIndexName) => baseIndexName + "-real-even";
     }
 }
