@@ -22,7 +22,7 @@ namespace UnitTests
                 .Setup(m => m.IsIndexExistsAsync(It.IsAny<string>()))
                 .Returns(() => Task.FromResult(true));
 
-            var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
+            var provider = new ReadyIndexProvider("foo", indexMgr.Object);
 
             //Act
             var indexer = await provider.ProvideIndexerAsync();
@@ -51,7 +51,7 @@ namespace UnitTests
                 .Setup(m => m.IsIndexExistsAsync(It.Is<string>(s => s == "foo")))
                 .Returns(() => Task.FromResult(false));
 
-            var provider = new ReadyIndexProvider(indexMgr.Object, "foo");
+            var provider = new ReadyIndexProvider("foo", indexMgr.Object);
 
             //Act
             var indexer = await provider.ProvideIndexerAsync();
