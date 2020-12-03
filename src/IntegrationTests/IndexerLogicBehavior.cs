@@ -3,10 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using MyLab.Indexer;
 using MyLab.Indexer.Tools;
 using MyLab.Mq;
+using Xunit;
 
 namespace IntegrationTests
 {
-    public class IndexerLogicBehavior
+    public class IndexerLogicBehavior : IClassFixture<TmpDbFixture>
     {
         IInputMessageEmulator InitTestLogic(IIndexManager indexManager)
         {
