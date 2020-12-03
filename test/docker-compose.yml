@@ -1,0 +1,25 @@
+version: '3.2'
+
+services:
+  mq:
+    container_name: mq
+    image: rabbitmq:3.8.3-management
+    ports:
+      - "10102:5672"
+      - "10103:15692"
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: es
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 10104:9200
