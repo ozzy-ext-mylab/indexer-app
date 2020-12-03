@@ -1,26 +1,9 @@
 version: '3.2'
 
 services:
-  db:
-    container_name: db
-    image: mysql:8.0.19
-    environment:
-      - MYSQL_ROOT_PASSWORD=root-password
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin-password
-      - MYSQL_DATABASE=test
-    volumes:
-      - ./config/init.sql:/init.sql
-    command: --init-file /init.sql
-    ports:
-      - "10101:3306"
-
   mq:
     container_name: mq
     image: rabbitmq:3.8.3-management
-    volumes:
-      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./config/rabbitmq-definitions.json:/etc/rabbitmq/definitions/0-config.json
     ports:
       - "10102:5672"
       - "10103:15692"
