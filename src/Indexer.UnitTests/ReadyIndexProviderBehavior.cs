@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Moq;
-using MyLab.Indexer.Tools;
+using MyLab.Indexer;
+using MyLab.Indexer.Common;
 using Xunit;
 
-namespace UnitTests
+namespace Indexer.UnitTests
 {
     public class ReadyIndexProviderBehavior
     {

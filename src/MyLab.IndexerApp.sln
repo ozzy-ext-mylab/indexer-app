@@ -3,19 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.Indexer", "MyLab.Indexer\MyLab.Indexer.csproj", "{44EAD594-BB9E-4A80-A250-3F37F98BE798}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{3F654203-8039-408B-B3B6-4306FB69F981}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.Indexer.Common", "MyLab.Indexer.Common\MyLab.Indexer.Common.csproj", "{93BCE56C-7AE0-49D4-8E85-7949D0EA1CB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.Indexer.Common", "MyLab.Indexer.Common\MyLab.Indexer.Common.csproj", "{93BCE56C-7AE0-49D4-8E85-7949D0EA1CB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.Indexer.Reindexer", "MyLab.Indexer.Reindexer\MyLab.Indexer.Reindexer.csproj", "{A67656DB-4473-4716-BCBA-9B9C67816C46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.Indexer.Reindexer", "MyLab.Indexer.Reindexer\MyLab.Indexer.Reindexer.csproj", "{A67656DB-4473-4716-BCBA-9B9C67816C46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.UnitTests", "Common.UnitTests\Common.UnitTests.csproj", "{21C45528-3384-4415-81A0-D1F2B37ED313}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTests", "Common.UnitTests\Common.UnitTests.csproj", "{21C45528-3384-4415-81A0-D1F2B37ED313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reindexer.UnitTests", "Reindexer.UnitTests\Reindexer.UnitTests.csproj", "{0CBBAB82-9AEE-42E6-995E-74F58312B3AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reindexer.UnitTests", "Reindexer.UnitTests\Reindexer.UnitTests.csproj", "{0CBBAB82-9AEE-42E6-995E-74F58312B3AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indexer.UnitTests", "Indexer.UnitTests\Indexer.UnitTests.csproj", "{FCC5F81C-61C8-4FB3-A0FE-43EFC82F8C20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,18 +21,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9E9A1FA-7277-41AE-A34C-A6C92E116D53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44EAD594-BB9E-4A80-A250-3F37F98BE798}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F654203-8039-408B-B3B6-4306FB69F981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F654203-8039-408B-B3B6-4306FB69F981}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F654203-8039-408B-B3B6-4306FB69F981}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F654203-8039-408B-B3B6-4306FB69F981}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93BCE56C-7AE0-49D4-8E85-7949D0EA1CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93BCE56C-7AE0-49D4-8E85-7949D0EA1CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93BCE56C-7AE0-49D4-8E85-7949D0EA1CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +41,10 @@ Global
 		{0CBBAB82-9AEE-42E6-995E-74F58312B3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CBBAB82-9AEE-42E6-995E-74F58312B3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CBBAB82-9AEE-42E6-995E-74F58312B3AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC5F81C-61C8-4FB3-A0FE-43EFC82F8C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC5F81C-61C8-4FB3-A0FE-43EFC82F8C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC5F81C-61C8-4FB3-A0FE-43EFC82F8C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC5F81C-61C8-4FB3-A0FE-43EFC82F8C20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

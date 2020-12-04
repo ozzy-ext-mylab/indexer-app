@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MyLab.Indexer.Reindexer
+namespace MyLab.Indexer.Common
 {
-    static class NewIndexNameBuilder
+    public static class NewIndexNameBuilder
     {
         public static string Build(string baseIndexName) => baseIndexName + "-real-" + Guid.NewGuid().ToString("N");
     }

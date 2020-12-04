@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB;
+using MyLab.Indexer.Common;
 
-namespace MyLab.Indexer.Tools
+namespace MyLab.Indexer
 {
     class SelectiveOriginEntityProviderLogic : IOriginEntityProviderLogic
     {

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyLab.Db;
+using MyLab.Indexer.Common;
+using MyLab.Mq.PubSub;
 
 namespace MyLab.Indexer
 {
@@ -18,8 +21,20 @@ namespace MyLab.Indexer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddIndexerLogic(Configuration);
+            var configSection = Configuration.GetSection("Indexer");
+
+            var dataProvider = DataProviders.Get<IndexerOptions>(configSection);
+
+            services
+                .Configure<IndexerOptions>(configSection)
+                .AddMqConsuming(reg =>
+                {
+                    reg.RegisterConsumerByOptions<IndexerOptions, string>(
+                        opts => opts.Queue, 
+                        queue => new MqConsumer<IndexingMsg, IndexerConsumerLogic>(queue));
+                })
+                .AddDbTools(Configuration, dataProvider);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

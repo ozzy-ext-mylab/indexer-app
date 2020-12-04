@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MyLab.Elastic;
 
-namespace MyLab.Indexer.Tools
+namespace MyLab.Indexer.Common
 {
     class EsDeindexer : IDeindexer
     {

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyLab.Indexer.Tools;
+using MyLab.Indexer;
+using MyLab.Indexer.Common;
 using Xunit;
 
-namespace UnitTests
+namespace Indexer.UnitTests
 {
     public class SelectiveOriginEntityProviderBehavior
     {
